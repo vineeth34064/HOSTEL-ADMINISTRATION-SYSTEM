@@ -22,7 +22,7 @@ This project provides a complete hostel management solution with a Node.js/Expre
 
 We are proud to acknowledge the following contributors who built the core modules of this system:
 
-1. **Vineet**
+1. **Vineet - Team Leader**
    - **Emergency Module**: Real-time alert system for student safety.
    - **Gate Pass**: Digital request and approval workflow for campus entry/exit.
    - **Mess Menu**: Weekly menu management and snack tracking.
