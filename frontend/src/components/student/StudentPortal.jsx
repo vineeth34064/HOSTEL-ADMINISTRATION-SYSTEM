@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { Routes, Route, useLocation } from 'react-router-dom';
 import * as api from '../../services/api';
 import { HomeIcon, UserIcon, QrCodeIcon, FileTextIcon, MessageSquareIcon, CreditCardIcon, UtensilsIcon, PackageIcon, AlertTriangleIcon, SearchIcon, TrophyIcon, ActivityIcon } from '../Icons';
 import Sidebar from '../common/Sidebar';
@@ -16,34 +17,27 @@ import SportsView from './SportsView';
 import AntiRaggingView from '../common/AntiRaggingView';
 import ProfilePage from '../common/ProfilePage';
 import HealthRecordView from './HealthRecordView';
+
 const StudentPortal = ({ user, onLogout, isDarkMode, setIsDarkMode }) => {
-    const [activeView, setActiveView] = useState('dashboard');
     const [studentData, setStudentData] = useState(null);
+    const location = useLocation();
+    
+    // Determine active name for header
+    const activeView = location.pathname.substring(1) || 'dashboard';
+
     const fetchData = useCallback(async () => {
-        const data = await api.getStudentData(user.id);
-        setStudentData(data);
+        try {
+            const data = await api.getStudentData(user.id);
+            setStudentData(data);
+        } catch (err) {
+            console.error('Failed to fetch student data:', err);
+        }
     }, [user.id]);
+
     useEffect(() => {
         fetchData();
     }, [fetchData]);
-    const renderView = () => {
-        switch (activeView) {
-            case 'profile': return <ProfilePage user={studentData?.user || user} room={studentData?.room}/>;
-            case 'health': return <HealthRecordView user={studentData?.user || user}/>;
-            case 'gatepass': return <GatePassView user={studentData?.user} gatePass={studentData?.gatePass} room={studentData?.room} refreshData={fetchData}/>;
-            case 'leave': return <LeaveRequestView user={user} leaves={studentData?.leaves} refreshData={fetchData}/>;
-            case 'complaint': return <ComplaintView user={user} complaints={studentData?.complaints} refreshData={fetchData}/>;
-            case 'payment': return <FeePaymentView user={user}/>;
-            case 'mess': return <MessMenuView menu={studentData?.messMenu}/>;
-            case 'parcel': return <ParcelView user={user} parcels={studentData?.parcels} refreshData={fetchData}/>;
-            case 'emergency': return <EmergencyView user={user} alerts={studentData?.emergencyAlerts} refreshData={fetchData}/>;
-            case 'lost-found': return <LostAndFoundView user={user} items={studentData?.lostAndFoundItems} refreshData={fetchData}/>;
-            case 'chat': return <ChatView user={user}/>;
-            case 'sports': return <SportsView user={user}/>;
-            case 'antiragging': return <AntiRaggingView user={user}/>;
-            default: return <StudentDashboard user={studentData?.user || user} notifications={studentData?.notifications}/>;
-        }
-    };
+
     const navItems = [
         { id: 'dashboard', label: 'Dashboard', icon: HomeIcon },
         { id: 'profile', label: 'My Profile', icon: UserIcon },
@@ -60,8 +54,17 @@ const StudentPortal = ({ user, onLogout, isDarkMode, setIsDarkMode }) => {
         { id: 'parcel', label: 'Parcel Info', icon: PackageIcon },
         { id: 'emergency', label: 'Emergency', icon: AlertTriangleIcon },
     ];
-    return (<div style={{ display: 'flex', height: '100dvh', overflow: 'hidden', background: 'var(--bg2)' }}>
-            <Sidebar navItems={navItems} activeView={activeView} setActiveView={setActiveView} onLogout={onLogout} user={user} isDarkMode={isDarkMode} setIsDarkMode={setIsDarkMode}/>
+
+    return (
+        <div style={{ display: 'flex', height: '100dvh', overflow: 'hidden', background: 'var(--bg2)' }}>
+            <Sidebar 
+                navItems={navItems} 
+                onLogout={onLogout} 
+                user={user} 
+                isDarkMode={isDarkMode} 
+                setIsDarkMode={setIsDarkMode} 
+            />
+            
             <main style={{ flex: 1, minWidth: 0, overflowY: 'auto', padding: '1.5rem' }} className="custom-scrollbar print:overflow-visible print:p-0">
                 <div key={activeView} className="hms-fade-up" style={{ width: '100%', paddingBottom: '2rem' }}>
                     <div className="hms-page-header print:hidden">
@@ -71,11 +74,34 @@ const StudentPortal = ({ user, onLogout, isDarkMode, setIsDarkMode }) => {
                             </div>
                         </div>
                     </div>
-                    {studentData ? renderView() : (<div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '60vh', color: 'var(--muted)', fontSize: '13px' }}>
+
+                    {studentData ? (
+                        <Routes>
+                            <Route path="/" element={<StudentDashboard user={studentData.user || user} notifications={studentData.notifications} />} />
+                            <Route path="/dashboard" element={<StudentDashboard user={studentData.user || user} notifications={studentData.notifications} />} />
+                            <Route path="/profile" element={<ProfilePage user={studentData.user || user} room={studentData.room} />} />
+                            <Route path="/health" element={<HealthRecordView user={studentData.user || user} />} />
+                            <Route path="/gatepass" element={<GatePassView user={studentData.user} gatePass={studentData.gatePass} room={studentData.room} refreshData={fetchData} />} />
+                            <Route path="/leave" element={<LeaveRequestView user={user} leaves={studentData.leaves} refreshData={fetchData} />} />
+                            <Route path="/complaint" element={<ComplaintView user={user} complaints={studentData.complaints} refreshData={fetchData} />} />
+                            <Route path="/payment" element={<FeePaymentView user={user} />} />
+                            <Route path="/mess" element={<MessMenuView menu={studentData.messMenu} />} />
+                            <Route path="/parcel" element={<ParcelView user={user} parcels={studentData.parcels} refreshData={fetchData} />} />
+                            <Route path="/emergency" element={<EmergencyView user={user} alerts={studentData.emergencyAlerts} refreshData={fetchData} />} />
+                            <Route path="/lost-found" element={<LostAndFoundView user={user} items={studentData.lostAndFoundItems} refreshData={fetchData} />} />
+                            <Route path="/chat" element={<ChatView user={user} />} />
+                            <Route path="/sports" element={<SportsView user={user} />} />
+                            <Route path="/antiragging" element={<AntiRaggingView user={user} />} />
+                        </Routes>
+                    ) : (
+                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '60vh', color: 'var(--muted)', fontSize: '13px' }}>
                             Loading…
-                        </div>)}
+                        </div>
+                    )}
                 </div>
             </main>
-        </div>);
+        </div>
+    );
 };
+
 export default StudentPortal;

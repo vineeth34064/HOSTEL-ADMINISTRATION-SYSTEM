@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { Routes, Route, useLocation } from 'react-router-dom';
 import * as api from '../../services/api';
 import { BarChartIcon, QrCodeIcon, FileTextIcon, MessageSquareIcon, BedDoubleIcon, CreditCardIcon, UtensilsIcon, PackageIcon, AlertTriangleIcon, SearchIcon, TrophyIcon, UserIcon, BellIcon, ActivityIcon } from '../Icons';
 import Sidebar from '../common/Sidebar';
@@ -18,38 +19,27 @@ import SportsView from '../student/SportsView';
 import AntiRaggingView from '../common/AntiRaggingView';
 import ProfilePage from '../common/ProfilePage';
 import AdminHealthRecords from './AdminHealthRecords';
+
 const AdminPortal = ({ user, onLogout, isDarkMode, setIsDarkMode }) => {
-    const [activeView, setActiveView] = useState('dashboard');
     const [adminData, setAdminData] = useState(null);
+    const location = useLocation();
+
+    // Determine active name for header
+    const activeView = location.pathname.substring(1) || 'dashboard';
+
     const fetchData = useCallback(async () => {
-        const data = await api.getAdminData();
-        setAdminData(data);
+        try {
+            const data = await api.getAdminData();
+            setAdminData(data);
+        } catch (err) {
+            console.error('Failed to fetch admin data:', err);
+        }
     }, []);
+
     useEffect(() => {
         fetchData();
     }, [fetchData]);
-    const renderView = () => {
-        if (!adminData)
-            return <div className="h-[60vh] flex items-center justify-center dark:text-white text-lg font-bold animate-pulse">Initializing Systems...</div>;
-        switch (activeView) {
-            case 'profile': return <ProfilePage user={user} isAdmin/>;
-            case 'health': return <AdminHealthRecords />;
-            case 'gatepass': return <GatePassManagement requests={adminData.gatePassRequests} refreshData={fetchData}/>;
-            case 'leave': return <LeaveManagement requests={adminData.leaveRequests} refreshData={fetchData}/>;
-            case 'complaints': return <ComplaintManagement requests={adminData.complaints} refreshData={fetchData}/>;
-            case 'rooms': return <RoomAllocation rooms={adminData.rooms} students={adminData.students} refreshData={fetchData}/>;
-            case 'fees': return <FeeStatus students={adminData.students} refreshData={fetchData}/>;
-            case 'mess': return <MessMenuEditor menu={adminData.messMenu} refreshData={fetchData}/>;
-            case 'parcels': return <ParcelManagement parcels={adminData.parcels} students={adminData.students} refreshData={fetchData}/>;
-            case 'emergency': return <EmergencyManagement alerts={adminData.emergencyAlerts} refreshData={fetchData}/>;
-            case 'lost-found': return <LostAndFoundManagement items={adminData.lostAndFoundItems} refreshData={fetchData}/>;
-            case 'notifications': return <AdminNotifications />;
-            case 'chat': return <ChatView user={user}/>;
-            case 'sports': return <SportsView user={user} isAdmin/>;
-            case 'antiragging': return <AntiRaggingView user={user}/>;
-            default: return <AdminDashboard analytics={adminData.analytics}/>;
-        }
-    };
+
     const navItems = [
         { id: 'dashboard', label: 'Dashboard', icon: BarChartIcon },
         { id: 'profile', label: 'Admin Profile', icon: UserIcon },
@@ -68,8 +58,17 @@ const AdminPortal = ({ user, onLogout, isDarkMode, setIsDarkMode }) => {
         { id: 'emergency', label: 'Emergency', icon: AlertTriangleIcon },
         { id: 'lost-found', label: 'Lost & Found', icon: SearchIcon },
     ];
-    return (<div style={{ display: 'flex', height: '100dvh', overflow: 'hidden', background: 'var(--bg2)' }}>
-            <Sidebar navItems={navItems} activeView={activeView} setActiveView={setActiveView} onLogout={onLogout} user={user} isDarkMode={isDarkMode} setIsDarkMode={setIsDarkMode}/>
+
+    return (
+        <div style={{ display: 'flex', height: '100dvh', overflow: 'hidden', background: 'var(--bg2)' }}>
+            <Sidebar 
+                navItems={navItems} 
+                onLogout={onLogout} 
+                user={user} 
+                isDarkMode={isDarkMode} 
+                setIsDarkMode={setIsDarkMode} 
+            />
+            
             <main style={{ flex: 1, minWidth: 0, overflowY: 'auto', padding: '1.5rem' }} className="custom-scrollbar">
                 <div key={activeView} className="hms-fade-up" style={{ width: '100%', paddingBottom: '2rem' }}>
                     <div className="hms-page-header">
@@ -79,9 +78,34 @@ const AdminPortal = ({ user, onLogout, isDarkMode, setIsDarkMode }) => {
                             </div>
                         </div>
                     </div>
-                    {renderView()}
+                    
+                    {adminData ? (
+                        <Routes>
+                            <Route path="/" element={<AdminDashboard analytics={adminData.analytics} />} />
+                            <Route path="/dashboard" element={<AdminDashboard analytics={adminData.analytics} />} />
+                            <Route path="/profile" element={<ProfilePage user={user} isAdmin />} />
+                            <Route path="/health" element={<AdminHealthRecords />} />
+                            <Route path="/gatepass" element={<GatePassManagement requests={adminData.gatePassRequests} refreshData={fetchData} />} />
+                            <Route path="/leave" element={<LeaveManagement requests={adminData.leaveRequests} refreshData={fetchData} />} />
+                            <Route path="/complaints" element={<ComplaintManagement requests={adminData.complaints} refreshData={fetchData} />} />
+                            <Route path="/rooms" element={<RoomAllocation rooms={adminData.rooms} students={adminData.students} refreshData={fetchData} />} />
+                            <Route path="/fees" element={<FeeStatus students={adminData.students} refreshData={fetchData} />} />
+                            <Route path="/mess" element={<MessMenuEditor menu={adminData.messMenu} refreshData={fetchData} />} />
+                            <Route path="/parcels" element={<ParcelManagement parcels={adminData.parcels} students={adminData.students} refreshData={fetchData} />} />
+                            <Route path="/emergency" element={<EmergencyManagement alerts={adminData.emergencyAlerts} refreshData={fetchData} />} />
+                            <Route path="/lost-found" element={<LostAndFoundManagement items={adminData.lostAndFoundItems} refreshData={fetchData} />} />
+                            <Route path="/notifications" element={<AdminNotifications />} />
+                            <Route path="/chat" element={<ChatView user={user} />} />
+                            <Route path="/sports" element={<SportsView user={user} isAdmin />} />
+                            <Route path="/antiragging" element={<AntiRaggingView user={user} />} />
+                        </Routes>
+                    ) : (
+                        <div className="h-[60vh] flex items-center justify-center dark:text-white text-lg font-bold animate-pulse">Initializing Systems...</div>
+                    )}
                 </div>
             </main>
-        </div>);
+        </div>
+    );
 };
+
 export default AdminPortal;
