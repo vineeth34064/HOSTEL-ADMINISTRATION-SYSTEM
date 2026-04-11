@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { User } from '../types';
-import * as api from '../services/api';
-import LoginForm from '../components/auth/LoginForm';
-import RegisterForm from '../components/auth/RegisterForm';
-import AdminPortal from '../components/admin/AdminPortal';
-import StudentPortal from '../components/student/StudentPortal';
-import AIChatbot from '../components/common/AIChatbot';
+import { User } from './types';
+import * as api from './services/api';
+import LoginForm from './components/auth/LoginForm';
+import RegisterForm from './components/auth/RegisterForm';
+import AdminPortal from './components/admin/AdminPortal';
+import StudentPortal from './components/student/StudentPortal';
+import AIChatbot from './components/common/AIChatbot';
 
 const App: React.FC = () => {
   const [user, setUser] = useState<User | null>(null);
@@ -94,7 +94,7 @@ const App: React.FC = () => {
         const token = path.split('/reset-password/')[1];
         const searchParams = new URLSearchParams(window.location.search);
         const email = searchParams.get('email') || '';
-        const ResetPassword = require('../components/auth/ResetPassword').default;
+        const ResetPassword = require('./components/auth/ResetPassword').default;
         
         return (
             <ResetPassword 
