@@ -41,18 +41,7 @@ export async function getSession() {
         return null;
     }
 }
-export async function forgotPassword(email) {
-    return request('/auth/forgot-password', {
-        method: 'POST',
-        body: JSON.stringify({ email }),
-    });
-}
-export async function resetPassword(email, token, newPassword) {
-    return request('/auth/reset-password', {
-        method: 'POST',
-        body: JSON.stringify({ email, token, newPassword }),
-    });
-}
+
 // Student
 export async function getStudentParcels(studentId) {
     return request(`/parcels/student/${studentId}`);

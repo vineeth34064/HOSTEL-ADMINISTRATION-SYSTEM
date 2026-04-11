@@ -82,19 +82,9 @@ const App = () => {
       </div>);
     }
     if (!user) {
-        const path = window.location.pathname;
-        if (path.startsWith('/reset-password/')) {
-            const token = path.split('/reset-password/')[1];
-            const searchParams = new URLSearchParams(window.location.search);
-            const email = searchParams.get('email') || '';
-            const ResetPassword = require('./components/auth/ResetPassword').default;
-            return (<ResetPassword email={email} token={token} onSuccess={() => {
-                    window.history.pushState({}, '', '/');
-                    setAuthMode('login');
-                }}/>);
-        }
-        return authMode === 'login' ? (<LoginForm authError={authError} onSubmit={handleLogin} onToggleMode={toggleAuthMode}/>) : (<RegisterForm authError={authError} onSubmit={handleRegister} onToggleMode={toggleAuthMode}/>);
+        return authMode === 'login' ? (<LoginForm authError={authError} onSubmit={handleLogin} onToggleMode={toggleAuthMode} />) : (<RegisterForm authError={authError} onSubmit={handleRegister} onToggleMode={toggleAuthMode} />);
     }
+
     return (<div className="w-full font-sans transition-colors duration-300">
       {user.role === 'admin' ? (<AdminPortal user={user} onLogout={handleLogout} isDarkMode={isDarkMode} setIsDarkMode={setIsDarkMode}/>) : (<StudentPortal user={user} onLogout={handleLogout} isDarkMode={isDarkMode} setIsDarkMode={setIsDarkMode}/>)}
       <AIChatbot />
