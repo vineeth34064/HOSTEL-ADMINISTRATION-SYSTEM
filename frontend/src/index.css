@@ -473,3 +473,41 @@ button:disabled { opacity: 0.5; cursor: not-allowed; }
     grid-template-columns: 1fr !important;
   }
 }
+@media (max-width: 768px) {
+  /* Fix Admin Profile Overflow */
+  .relative.h-64 { height: auto !important; min-height: 16rem !important; }
+  .p-8.flex-col { align-items: center !important; text-align: center !important; padding: 1.5rem !important; }
+  .w-40.h-40 { width: 100px !important; height: 100px !important; font-size: 2.5rem !important; margin: 0 auto !important; }
+
+  /* Ensure Table Scrollbar is completely visible permanently on mobile */
+  .hms-card-body::-webkit-scrollbar {
+    display: block !important;
+    height: 6px !important;
+    -webkit-appearance: none;
+  }
+  .hms-card-body::-webkit-scrollbar-thumb {
+    background-color: var(--gold) !important;
+    border-radius: 4px;
+  }
+  .hms-card-body::-webkit-scrollbar-track {
+    background-color: var(--bg2) !important;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+  }
+  .hms-card-body {
+    padding-bottom: 12px !important; 
+  }
+
+  /* Fix Admin Dashboard Analytics squished invisibility */
+  div[style*=""grid-template-columns: 2fr 1fr""] {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* Center AI Chat Frame precisely for all phones */
+  div[style*=""height: 500px""][style*=""z-index: 10000""] {
+    width: 90vw !important;
+    right: 5vw !important;
+    left: auto !important;
+    bottom: 90px !important;
+  }
+}
