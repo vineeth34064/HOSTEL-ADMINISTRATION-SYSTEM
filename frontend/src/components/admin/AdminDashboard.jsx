@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
+import { LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip, PieChart, Pie, Cell } from 'recharts';
 import { AlertTriangleIcon, UserIcon, FileTextIcon, MessageSquareIcon, PackageIcon, CreditCardIcon } from '../Icons';
 const AdminDashboard = ({ analytics }) => {
     if (!analytics)
@@ -80,16 +80,14 @@ const AdminDashboard = ({ analytics }) => {
                             <div className="hms-card-sub">Last 7 days</div>
                         </div>
                     </div>
-                    <div className="hms-card-body">
-                        <ResponsiveContainer width="100%" height={240}>
-                            <LineChart data={analytics.leaveRequestsOverTime.slice(-7)}>
-                                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="var(--border)"/>
-                                <XAxis dataKey="date" axisLine={false} tickLine={false} tick={{ fill: 'var(--muted)', fontSize: 11 }}/>
-                                <YAxis axisLine={false} tickLine={false} tick={{ fill: 'var(--muted)', fontSize: 11 }}/>
-                                <Tooltip contentStyle={{ borderRadius: 8, border: '1px solid var(--border)', background: 'var(--bg)', fontSize: 12, color: 'var(--text)' }}/>
-                                <Line type="monotone" dataKey="count" stroke="var(--gold)" strokeWidth={2.5} dot={{ r: 4, fill: 'var(--gold)', stroke: 'var(--bg)', strokeWidth: 2 }}/>
-                            </LineChart>
-                        </div>
+                    <div className="hms-card-body" style={{ overflowX: 'auto' }}>
+                        <LineChart width={560} height={240} data={analytics.leaveRequestsOverTime.slice(-7)}>
+                            <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="var(--border)"/>
+                            <XAxis dataKey="date" axisLine={false} tickLine={false} tick={{ fill: 'var(--muted)', fontSize: 11 }}/>
+                            <YAxis axisLine={false} tickLine={false} tick={{ fill: 'var(--muted)', fontSize: 11 }}/>
+                            <Tooltip contentStyle={{ borderRadius: 8, border: '1px solid var(--border)', background: 'var(--bg)', fontSize: 12, color: 'var(--text)' }}/>
+                            <Line type="monotone" dataKey="count" stroke="var(--gold)" strokeWidth={2.5} dot={{ r: 4, fill: 'var(--gold)', stroke: 'var(--bg)', strokeWidth: 2 }}/>
+                        </LineChart>
                     </div>
                 </div>
 
