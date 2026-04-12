@@ -53,7 +53,7 @@ export default function HealthRecordView({ user }) {
                 <div style={{ position: 'absolute', right: -40, top: -40, width: 140, height: 140, borderRadius: '50%', background: 'rgba(255,255,255,0.07)', pointerEvents: 'none' }}/>
             </motion.div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', gap: '1rem' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1rem' }}>
                 {/* Left column */}
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
                     {/* Vitals */}
@@ -91,7 +91,7 @@ export default function HealthRecordView({ user }) {
                         <div style={{ padding: '0.75rem 1rem', borderBottom: '1px solid var(--border)', background: 'var(--bg2)' }}>
                             <div style={{ fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em', color: 'var(--muted)' }}>Medical Profile</div>
                         </div>
-                        <div style={{ padding: '1rem', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.875rem' }}>
+                        <div style={{ padding: '1rem', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '0.875rem' }}>
                             <div style={{ background: 'var(--bg2)', borderRadius: 10, padding: '0.875rem' }}>
                                 <div style={{ fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em', color: 'var(--muted)', marginBottom: 8 }}>Known Allergies</div>
                                 {record.allergies.length > 0 ? (<div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
@@ -125,7 +125,7 @@ export default function HealthRecordView({ user }) {
                     </motion.div>
 
                     {/* Doctor & Insurance */}
-                    <motion.div variants={item} style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+                    <motion.div variants={item} style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem' }}>
                         {[
             { label: 'Primary Doctor', lines: [record.doctorDetails.name, record.doctorDetails.hospital, record.doctorDetails.phone] },
             { label: 'Health Insurance', lines: [record.healthInsuranceDetails.providerName, record.healthInsuranceDetails.policyNumber] },

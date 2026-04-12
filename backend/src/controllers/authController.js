@@ -22,14 +22,40 @@ export async function register(req, res) {
     const passwordHash = await bcrypt.hash(password, SALT_ROUNDS);
     const user = await User.create({ name, email, passwordHash, role: 'student', rollNumber, contactNumber, feePaid: false });
 
-    // Create a dummy health record ensuring it initializes properly
+    // Auto-create a blank health record for the new student.
+    // All required/enum fields must be explicitly set to avoid silent Mongoose validation failures.
     try {
       await HealthRecord.create({
         student: user._id,
         studentName: user.name,
+        bloodGroup: 'O+',
+        heightCm: 0,
+        weightKg: 0,
+        allergies: [],
+        existingMedicalConditions: [],
+        currentMedications: [],
+        recentIllnesses: [],
+        medicalHistory: 'No medical history provided.',
+        disabilityInfo: 'None',
+        emergencyContact: {
+          name: 'Not provided',
+          relation: 'Not provided',
+          phone: 'Not provided',
+        },
+        doctorDetails: {
+          name: 'Not assigned',
+          hospital: 'Not assigned',
+          phone: 'Not assigned',
+        },
+        healthInsuranceDetails: {
+          providerName: 'Not provided',
+          policyNumber: 'Not provided',
+        },
+        lastMedicalCheckup: new Date(),
       });
+      console.log(`Health record created for user: ${user.name}`);
     } catch (e) {
-      console.error('Failed to create health record', e);
+      console.error('Failed to create health record:', e.message);
     }
 
     const token = createToken(user);
