@@ -105,7 +105,7 @@ body {
 }
 .hms-card-title  { font-size: 14px; font-weight: 500; color: var(--text); }
 .hms-card-sub    { font-size: 11px; color: var(--muted); margin-top: 2px; }
-.hms-card-body   { padding: 1.25rem; }
+.hms-card-body   { padding: 1.25rem; overflow-x: auto; }
 
 /* ─── Stat Card ─── */
 .hms-stat {
