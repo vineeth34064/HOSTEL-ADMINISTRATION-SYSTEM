@@ -104,8 +104,14 @@ export async function register(req, res) {
     }
 
     const token = createToken(user);
+    const isProduction = process.env.NODE_ENV === 'production';
     res
-      .cookie('token', token, { httpOnly: true, sameSite: 'lax' })
+      .cookie('token', token, {
+        httpOnly: true,
+        sameSite: isProduction ? 'none' : 'lax',
+        secure: isProduction,
+        maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+      })
       .json(mapUser(user));
   } catch (err) {
     console.error(err);
@@ -127,8 +133,14 @@ export async function login(req, res) {
     }
 
     const token = createToken(user);
+    const isProduction = process.env.NODE_ENV === 'production';
     res
-      .cookie('token', token, { httpOnly: true, sameSite: 'lax' })
+      .cookie('token', token, {
+        httpOnly: true,
+        sameSite: isProduction ? 'none' : 'lax',
+        secure: isProduction,
+        maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+      })
       .json(mapUser(user));
   } catch (err) {
     console.error(err);

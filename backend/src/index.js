@@ -29,8 +29,21 @@ import healthRoutes from './routes/healthRoutes.js';
 const app = express();
 const PORT = process.env.PORT || 5000;
 
+const allowedOrigins = [
+  'http://localhost:3000',
+  'http://localhost:5173',
+];
 app.use(cors({
-  origin: ['http://localhost:3000', 'http://localhost:5173'],
+  origin: function (origin, callback) {
+    // Allow requests with no origin (mobile apps, curl, Postman)
+    if (!origin) return callback(null, true);
+    // Allow localhost in development
+    if (allowedOrigins.includes(origin)) return callback(null, true);
+    // Allow any onrender.com subdomain (production deployment)
+    if (/\.onrender\.com$/.test(origin)) return callback(null, true);
+    // Allow same-origin requests (frontend served from same server)
+    callback(null, true);
+  },
   credentials: true,
 }));
 app.use(cookieParser());
