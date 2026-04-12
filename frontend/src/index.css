@@ -511,3 +511,40 @@ button:disabled { opacity: 0.5; cursor: not-allowed; }
     bottom: 90px !important;
   }
 }
+@media (max-width: 768px) {
+  /* Bulletproof Universal Scrollable Tables */
+  .hms-table {
+    display: block !important;
+    overflow-x: auto !important;
+    white-space: nowrap !important;
+    -webkit-overflow-scrolling: touch;
+    width: 100vw !important;
+    max-width: 100% !important;
+    margin-bottom: 8px !important;
+  }
+  .hms-table::-webkit-scrollbar {
+    display: block !important;
+    height: 8px !important;
+    -webkit-appearance: none;
+  }
+  .hms-table::-webkit-scrollbar-thumb {
+    background-color: var(--gold) !important;
+    border-radius: 4px;
+    border: 1px solid var(--bg2);
+  }
+  .hms-table::-webkit-scrollbar-track {
+    background-color: var(--bg2) !important;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+  }
+  
+  /* Ensure padding inside tables is compact to save screen real estate */
+  .hms-table th, .hms-table td {
+    padding: 10px 12px !important;
+  }
+
+  /* Any container holding a hms-table that's breaking the layout gets fixed */
+  .hms-card > div[style*="padding: 0"] {
+    overflow-x: auto !important;
+  }
+}
