@@ -56,7 +56,7 @@ export async function acknowledgeEmergencyAlert(req, res) {
   }
 }
 
-function mapEmergency(e) {
+function mapEmergency(e){
   return {
     id: e._id.toString(),
     studentId: e.student.toString(),

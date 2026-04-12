@@ -1,4 +1,4 @@
-import { GatePass } from '../models/GatePass.js';
+import { GatePass } from '../models/GatePass.js'; 
 import { User } from '../models/User.js';
 
 export async function applyForGatePass(req, res) {

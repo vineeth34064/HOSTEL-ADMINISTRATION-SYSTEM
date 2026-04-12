@@ -2,6 +2,11 @@ import express from 'express';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import { connectDB } from './config/db.js';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 import authRoutes from './routes/authRoutes.js';
 import studentRoutes from './routes/studentRoutes.js';
@@ -49,6 +54,20 @@ app.use('/api/notifications', notificationRoutes);
 app.use('/api/chat', chatRoutes);
 app.use('/api/antiragging', antiRaggingRoutes);
 app.use('/api/chatbot', aiChatbotRoutes);
+
+// Serve Static Frontend files in Production
+if (process.env.NODE_ENV === 'production') {
+  const frontendPath = path.join(__dirname, '../../frontend/dist');
+  app.use(express.static(frontendPath));
+  
+  // SPA fallback for frontend routes
+  app.get('*', (req, res) => {
+    if (req.url.startsWith('/api')) {
+      return res.status(404).json({ message: 'API endpoint not found' });
+    }
+    res.sendFile(path.join(frontendPath, 'index.html'));
+  });
+}
 
 app.use((err, req, res, next) => {
   console.error('Unhandled error:', err);
