@@ -64,14 +64,7 @@ export default function AIChatbot() {
 
             {/* Chat window */}
             <AnimatePresence>
-                {isOpen && (<motion.div initial={{ opacity: 0, scale: 0.85, y: 20, originX: 1, originY: 1 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.85, y: 20 }} transition={{ type: 'spring', stiffness: 300, damping: 26 }} style={{
-                position: 'fixed', bottom: 92, right: 24, zIndex: 10000,
-                width: 360, height: 500, maxHeight: '80vh',
-                display: 'flex', flexDirection: 'column',
-                background: 'var(--bg)', border: '1px solid var(--border)',
-                borderRadius: 20, overflow: 'hidden',
-                boxShadow: '0 20px 60px rgba(0,0,0,0.18)',
-            }}>
+                {isOpen && (<motion.div initial={{ opacity: 0, scale: 0.85, y: 20, originX: 1, originY: 1 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.85, y: 20 }} transition={{ type: 'spring', stiffness: 300, damping: 26 }} className="fixed z-[10000] bottom-[90px] md:bottom-[92px] right-[5vw] md:right-6 w-[90vw] md:w-[360px] h-[500px] max-h-[80vh] flex flex-col bg-[var(--bg)] border border-[var(--border)] rounded-[20px] overflow-hidden shadow-[0_20px_60px_rgba(0,0,0,0.18)]">
                         {/* Header */}
                         <div style={{
                 background: 'linear-gradient(135deg, var(--gold), var(--gold-l))',

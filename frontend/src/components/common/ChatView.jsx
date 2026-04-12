@@ -90,7 +90,7 @@ const ChatView = ({ user }) => {
             {u.unreadCount > 0 && (<span style={{ width: 8, height: 8, borderRadius: '50%', background: 'var(--accent)', flexShrink: 0 }}/>)}
         </div>);
     const sidebarLabel = (text) => (<div style={{ fontSize: 9, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.12em', color: 'var(--muted)', padding: '0.5rem 0.875rem 0.25rem' }}>{text}</div>);
-    return (<motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} style={{ display: 'flex', flexDirection: 'column', height: 'calc(100vh - 120px)' }}>
+    return (<motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} className="flex flex-col h-[calc(100vh-120px)] md:h-[calc(100vh-80px)]">
             {/* Banner */}
             <div style={{
             background: 'linear-gradient(135deg, var(--gold), var(--gold-l))',
@@ -107,9 +107,9 @@ const ChatView = ({ user }) => {
                 <div style={{ position: 'absolute', right: -30, top: -30, width: 110, height: 110, borderRadius: '50%', background: 'rgba(255,255,255,0.07)', pointerEvents: 'none' }}/>
             </div>
 
-            <div style={{ flex: 1, display: 'flex', background: 'var(--bg)', border: '1px solid var(--border)', borderRadius: 16, overflow: 'hidden', minHeight: 0 }}>
+            <div className="flex-1 flex flex-col md:flex-row bg-[var(--bg)] border border-[var(--border)] rounded-2xl overflow-hidden min-h-0">
             {/* Sidebar */}
-            <div style={{ width: 260, borderRight: '1px solid var(--border)', display: 'flex', flexDirection: 'column', background: 'var(--bg2)', flexShrink: 0 }}>
+            <div className="w-full md:w-[260px] border-b md:border-b-0 md:border-r border-[var(--border)] flex flex-col bg-[var(--bg2)] shrink-0 h-[35vh] md:h-auto max-h-[300px] md:max-h-none">
                 {/* Header */}
                 <div style={{ padding: '1rem 1rem 0.75rem', borderBottom: '1px solid var(--border)' }}>
                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.75rem' }}>
