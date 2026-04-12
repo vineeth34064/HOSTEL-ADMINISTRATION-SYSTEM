@@ -64,7 +64,36 @@ export default function AIChatbot() {
 
             {/* Chat window */}
             <AnimatePresence>
-                {isOpen && (<motion.div initial={{ opacity: 0, scale: 0.85, y: 20, originX: 0.5, originY: 1 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.85, y: 20 }} transition={{ type: 'spring', stiffness: 300, damping: 26 }} className="fixed z-[10000] bottom-[90px] md:bottom-[92px] left-1/2 -translate-x-1/2 md:left-auto md:translate-x-0 md:right-6 w-[92vw] md:w-[360px] h-[500px] max-h-[80vh] flex flex-col bg-[var(--bg)] border border-[var(--border)] rounded-[20px] overflow-hidden shadow-[0_20px_60px_rgba(0,0,0,0.18)]">
+                {isOpen && (
+                    /* Wrapper handles centering — completely independent of Framer Motion's transform */
+                    <div style={{
+                        position: 'fixed',
+                        zIndex: 10000,
+                        bottom: 90,
+                        /* Mobile: centre of screen  |  Desktop: right edge */
+                        left: window.innerWidth < 768 ? '50%' : 'auto',
+                        right: window.innerWidth < 768 ? 'auto' : 24,
+                        marginLeft: window.innerWidth < 768 ? `${-Math.min(window.innerWidth * 0.46, 180)}px` : 0,
+                        width: window.innerWidth < 768 ? Math.min(window.innerWidth * 0.92, 420) : 360,
+                    }}>
+                    <motion.div
+                        initial={{ opacity: 0, scale: 0.88, y: 20 }}
+                        animate={{ opacity: 1, scale: 1, y: 0 }}
+                        exit={{ opacity: 0, scale: 0.88, y: 20 }}
+                        transition={{ type: 'spring', stiffness: 300, damping: 26 }}
+                        style={{
+                            width: '100%',
+                            height: 500,
+                            maxHeight: '80vh',
+                            display: 'flex',
+                            flexDirection: 'column',
+                            background: 'var(--bg)',
+                            border: '1px solid var(--border)',
+                            borderRadius: 20,
+                            overflow: 'hidden',
+                            boxShadow: '0 20px 60px rgba(0,0,0,0.18)',
+                        }}
+                    >
                         {/* Header */}
                         <div style={{
                 background: 'linear-gradient(135deg, var(--gold), var(--gold-l))',
@@ -145,7 +174,9 @@ export default function AIChatbot() {
                                     <div style={{ padding: '0.625rem 1rem', background: 'var(--bg)', border: '1px solid var(--border)', borderRadius: '18px 18px 18px 4px', display: 'flex', gap: 5, alignItems: 'center' }}>
                                         {[0, 0.15, 0.3].map((delay, i) => (<motion.div key={i} animate={{ y: [0, -5, 0] }} transition={{ duration: 0.7, repeat: Infinity, delay }} style={{ width: 6, height: 6, borderRadius: '50%', background: 'var(--muted)' }}/>))}
                                     </div>
-                                </motion.div>)}
+                                </motion.div>
+                    </div>
+                )}
                             <div ref={messagesEndRef}/>
                         </div>
 
@@ -172,7 +203,9 @@ export default function AIChatbot() {
                                 <SendIcon />
                             </button>
                         </form>
-                    </motion.div>)}
+                    </motion.div>
+                    </div>
+                )}
             </AnimatePresence>
         </>);
 }
