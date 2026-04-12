@@ -385,3 +385,51 @@ button:disabled { opacity: 0.5; cursor: not-allowed; }
   body { background: white !important; }
   .hms-sidebar, .print\:hidden { display: none !important; }
 }
+@media (max-width: 768px) {
+  /* Make hardcoded grid rows stack perfectly */
+  div[style*="grid-template-columns"] {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* Allow flex containers holding buttons/titles to wrap when squished */
+  div[style*="display: flex"] {
+    flex-wrap: wrap;
+  }
+
+  /* Override fixed padding and large margins */
+  main {
+    padding: 1rem !important;
+  }
+
+  /* Stack Card Headers naturally */
+  .hms-card-header, .hms-page-header {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 0.75rem !important;
+  }
+
+  /* Ensure inputs don't trigger awful zooming on iPhone */
+  .hms-input, .hms-select {
+    font-size: 16px !important;
+    padding: 10px 12px !important;
+  }
+
+  /* Ensure all buttons take full width for easy tapping */
+  .hms-btn, .hms-btn-sm {
+    width: 100% !important;
+    justify-content: center !important;
+    margin-top: 5px;
+  }
+
+  /* Keep table data strictly on one line and let them be swiped */
+  .hms-table td, .hms-table th {
+    white-space: nowrap !important;
+  }
+
+  /* Student Dashboard Top Banner specific fix */
+  .hms-fade-up > div[style*="border-radius: 20px"] {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 1.5rem !important;
+  }
+}
