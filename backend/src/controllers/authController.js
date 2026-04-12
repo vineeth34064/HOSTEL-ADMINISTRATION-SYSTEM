@@ -1,5 +1,6 @@
 import bcrypt from 'bcryptjs';
 import { User } from '../models/User.js';
+import { HealthRecord } from '../models/HealthRecord.js';
 import { createToken } from '../middleware/auth.js';
 import crypto from 'crypto';
 import nodemailer from 'nodemailer';
@@ -20,6 +21,16 @@ export async function register(req, res) {
 
     const passwordHash = await bcrypt.hash(password, SALT_ROUNDS);
     const user = await User.create({ name, email, passwordHash, role: 'student', rollNumber, contactNumber, feePaid: false });
+
+    // Create a dummy health record ensuring it initializes properly
+    try {
+      await HealthRecord.create({
+        student: user._id,
+        studentName: user.name,
+      });
+    } catch (e) {
+      console.error('Failed to create health record', e);
+    }
 
     const token = createToken(user);
     res
