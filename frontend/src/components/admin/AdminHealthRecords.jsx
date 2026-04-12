@@ -37,12 +37,7 @@ export default function AdminHealthRecords() {
         </div>);
     return (<motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
             {/* Banner */}
-            <div style={{
-            background: 'linear-gradient(135deg, #e11d48, #f43f5e)',
-            borderRadius: 20, padding: '1.25rem 1.75rem',
-            display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-            position: 'relative', overflow: 'hidden',
-        }}>
+            <div className="bg-gradient-to-br from-rose-600 to-rose-500 rounded-2xl p-5 md:p-7 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 relative overflow-hidden">
                 <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
                     <div style={{ width: 46, height: 46, borderRadius: 12, background: 'rgba(255,255,255,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
                         <ActivityIcon style={{ width: 22, height: 22, color: '#fff' }}/>

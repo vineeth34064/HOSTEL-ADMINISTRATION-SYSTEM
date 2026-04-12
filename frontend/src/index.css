@@ -548,3 +548,8 @@ button:disabled { opacity: 0.5; cursor: not-allowed; }
     overflow-x: auto !important;
   }
 }
+  /* Force search bars inside health records to respect mobile boundaries */
+  input[placeholder*="Search name"] {
+    width: 100% !important;
+    max-width: 100% !important;
+  }

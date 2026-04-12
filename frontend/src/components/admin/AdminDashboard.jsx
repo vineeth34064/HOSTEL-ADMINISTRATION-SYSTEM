@@ -89,7 +89,7 @@ const AdminDashboard = ({ analytics }) => {
                                 <Tooltip contentStyle={{ borderRadius: 8, border: '1px solid var(--border)', background: 'var(--bg)', fontSize: 12, color: 'var(--text)' }}/>
                                 <Line type="monotone" dataKey="count" stroke="var(--gold)" strokeWidth={2.5} dot={{ r: 4, fill: 'var(--gold)', stroke: 'var(--bg)', strokeWidth: 2 }}/>
                             </LineChart>
-                        </ResponsiveContainer>
+                        </div>
                     </div>
                 </div>
 
@@ -102,14 +102,14 @@ const AdminDashboard = ({ analytics }) => {
                         </div>
                     </div>
                     <div className="hms-card-body">
-                        <ResponsiveContainer width="100%" height={200}>
-                            <PieChart>
+                        <div style={{ width: '100%', height: 200, display: 'flex', justifyContent: 'center' }}>
+                            <PieChart width={200} height={200}>
                                 <Pie data={feePieData} dataKey="value" nameKey="name" cx="50%" cy="50%" innerRadius={50} outerRadius={75} paddingAngle={4}>
                                     {feePieData.map((_, i) => <Cell key={i} fill={PIE_COLORS[i]} stroke="none"/>)}
                                 </Pie>
                                 <Tooltip contentStyle={{ borderRadius: 8, border: '1px solid var(--border)', background: 'var(--bg)', fontSize: 12 }}/>
                             </PieChart>
-                        </ResponsiveContainer>
+                        </div>
                         <div style={{ display: 'flex', justifyContent: 'center', gap: 16 }}>
                             {[['var(--green)', `Paid (${analytics.feesPaid})`], ['var(--red)', `Pending (${analytics.feesPending})`]].map(([clr, lbl]) => (<div key={lbl} style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 11, color: 'var(--muted)' }}>
                                     <span style={{ width: 8, height: 8, borderRadius: 2, background: clr, display: 'inline-block' }}/>

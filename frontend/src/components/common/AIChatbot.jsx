@@ -64,7 +64,7 @@ export default function AIChatbot() {
 
             {/* Chat window */}
             <AnimatePresence>
-                {isOpen && (<motion.div initial={{ opacity: 0, scale: 0.85, y: 20, originX: 1, originY: 1 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.85, y: 20 }} transition={{ type: 'spring', stiffness: 300, damping: 26 }} className="fixed z-[10000] bottom-[90px] md:bottom-[92px] right-[5vw] md:right-6 w-[90vw] md:w-[360px] h-[500px] max-h-[80vh] flex flex-col bg-[var(--bg)] border border-[var(--border)] rounded-[20px] overflow-hidden shadow-[0_20px_60px_rgba(0,0,0,0.18)]">
+                {isOpen && (<motion.div initial={{ opacity: 0, scale: 0.85, y: 20, originX: 0.5, originY: 1 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.85, y: 20 }} transition={{ type: 'spring', stiffness: 300, damping: 26 }} className="fixed z-[10000] bottom-[90px] md:bottom-[92px] left-1/2 -translate-x-1/2 md:left-auto md:translate-x-0 md:right-6 w-[92vw] md:w-[360px] h-[500px] max-h-[80vh] flex flex-col bg-[var(--bg)] border border-[var(--border)] rounded-[20px] overflow-hidden shadow-[0_20px_60px_rgba(0,0,0,0.18)]">
                         {/* Header */}
                         <div style={{
                 background: 'linear-gradient(135deg, var(--gold), var(--gold-l))',

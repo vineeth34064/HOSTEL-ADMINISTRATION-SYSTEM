@@ -10,7 +10,7 @@ const StudentDashboard = ({ user, notifications }) => {
             <motion.div variants={item} style={{
             background: 'linear-gradient(135deg, var(--gold), var(--gold-l))',
             borderRadius: 20, padding: '1.75rem 2rem', marginBottom: '1.5rem',
-            display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+            display: 'flex', flexDirection: window.innerWidth < 768 ? 'column' : 'row', alignItems: window.innerWidth < 768 ? 'flex-start' : 'center', justifyContent: 'space-between', gap: '1rem',
             position: 'relative', overflow: 'hidden',
         }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
