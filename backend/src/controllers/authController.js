@@ -22,38 +22,83 @@ export async function register(req, res) {
     const passwordHash = await bcrypt.hash(password, SALT_ROUNDS);
     const user = await User.create({ name, email, passwordHash, role: 'student', rollNumber, contactNumber, feePaid: false });
 
-    // Auto-create a blank health record for the new student.
-    // All required/enum fields must be explicitly set to avoid silent Mongoose validation failures.
+    // Auto-create a realistic dummy health record for the new student.
     try {
+      const bloodGroups = ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'];
+      const randomBlood = bloodGroups[Math.floor(Math.random() * bloodGroups.length)];
+      const randomHeight = Math.floor(Math.random() * 31) + 155; // 155–185 cm
+      const randomWeight = Math.floor(Math.random() * 36) + 50;  // 50–85 kg
+
+      const sampleAllergies = [
+        ['Dust', 'Pollen'],
+        ['Peanuts'],
+        ['Penicillin', 'Shellfish'],
+        [],
+        ['Latex'],
+        ['None reported'],
+      ];
+      const sampleMedications = [
+        ['Vitamin D3 – 1000 IU daily'],
+        ['Cetirizine 10mg – as needed'],
+        [],
+        ['Iron supplement – once daily'],
+        ['Multivitamin – once daily'],
+      ];
+      const sampleConditions = [
+        [], [], [],
+        ['Mild asthma'],
+        ['Seasonal rhinitis'],
+      ];
+      const sampleHistory = [
+        'No significant medical history.',
+        'Recovered from typhoid in 2022. No current complications.',
+        'Underwent appendectomy in 2021. Fully recovered.',
+        'History of seasonal allergies. Managed with antihistamines.',
+        'No known chronic illnesses or prior surgeries.',
+      ];
+      const sampleDoctors = [
+        { name: 'Dr. Ravi Shankar', hospital: 'Apollo Hospital, Hyderabad', phone: '+91-40-23607777' },
+        { name: 'Dr. Priya Menon', hospital: 'KIMS Hospital, Secunderabad', phone: '+91-40-44885000' },
+        { name: 'Dr. Anil Kumar', hospital: 'Yashoda Hospital, Somajiguda', phone: '+91-40-45674567' },
+        { name: 'Dr. Sunita Reddy', hospital: 'Care Hospital, Banjara Hills', phone: '+91-40-30418000' },
+      ];
+      const sampleInsurance = [
+        { providerName: 'Star Health Insurance', policyNumber: `SHI-${Math.floor(100000 + Math.random() * 900000)}` },
+        { providerName: 'HDFC ERGO Health', policyNumber: `HEH-${Math.floor(100000 + Math.random() * 900000)}` },
+        { providerName: 'New India Assurance', policyNumber: `NIA-${Math.floor(100000 + Math.random() * 900000)}` },
+        { providerName: 'Bajaj Allianz Health', policyNumber: `BAH-${Math.floor(100000 + Math.random() * 900000)}` },
+      ];
+      const sampleContacts = [
+        { name: 'Rajesh Kumar', relation: 'Father', phone: '+91-98765-43210' },
+        { name: 'Sunita Devi', relation: 'Mother', phone: '+91-91234-56789' },
+        { name: 'Anita Singh', relation: 'Guardian', phone: '+91-99887-76655' },
+        { name: 'Mohan Lal', relation: 'Father', phone: '+91-88776-65544' },
+      ];
+
+      const pick = (arr) => arr[Math.floor(Math.random() * arr.length)];
+
+      // Set last medical checkup to a date within the past year
+      const pastDate = new Date();
+      pastDate.setMonth(pastDate.getMonth() - Math.floor(Math.random() * 10 + 1));
+
       await HealthRecord.create({
         student: user._id,
         studentName: user.name,
-        bloodGroup: 'O+',
-        heightCm: 0,
-        weightKg: 0,
-        allergies: [],
-        existingMedicalConditions: [],
-        currentMedications: [],
+        bloodGroup: randomBlood,
+        heightCm: randomHeight,
+        weightKg: randomWeight,
+        allergies: pick(sampleAllergies),
+        existingMedicalConditions: pick(sampleConditions),
+        currentMedications: pick(sampleMedications),
         recentIllnesses: [],
-        medicalHistory: 'No medical history provided.',
+        medicalHistory: pick(sampleHistory),
         disabilityInfo: 'None',
-        emergencyContact: {
-          name: 'Not provided',
-          relation: 'Not provided',
-          phone: 'Not provided',
-        },
-        doctorDetails: {
-          name: 'Not assigned',
-          hospital: 'Not assigned',
-          phone: 'Not assigned',
-        },
-        healthInsuranceDetails: {
-          providerName: 'Not provided',
-          policyNumber: 'Not provided',
-        },
-        lastMedicalCheckup: new Date(),
+        emergencyContact: pick(sampleContacts),
+        doctorDetails: pick(sampleDoctors),
+        healthInsuranceDetails: pick(sampleInsurance),
+        lastMedicalCheckup: pastDate,
       });
-      console.log(`Health record created for user: ${user.name}`);
+      console.log(`Health record created for user: ${user.name} (Blood: ${randomBlood})`);
     } catch (e) {
       console.error('Failed to create health record:', e.message);
     }
