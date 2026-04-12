@@ -29,28 +29,27 @@ import healthRoutes from './routes/healthRoutes.js';
 const app = express();
 const PORT = process.env.PORT || 5000;
 
+// Trust the first proxy (Render uses a load balancer/proxy)
+app.set('trust proxy', 1);
+
 const allowedOrigins = [
   'http://localhost:3000',
   'http://localhost:5173',
 ];
+
 app.use(cors({
   origin: function (origin, callback) {
-    // Allow requests with no origin (mobile apps, curl, Postman)
     if (!origin) return callback(null, true);
-    // Allow localhost in development
-    if (allowedOrigins.includes(origin)) return callback(null, true);
-    // Allow any onrender.com subdomain (production deployment)
-    if (/\.onrender\.com$/.test(origin)) return callback(null, true);
-    // Allow same-origin requests (frontend served from same server)
-    callback(null, true);
+    const isAllowed = allowedOrigins.includes(origin) || /\.onrender\.com$/.test(origin);
+    callback(null, true); // Allow all while reflecting request origin for maximum compatibility
   },
   credentials: true,
 }));
+
 app.use(cookieParser());
 app.use(express.json());
 
 app.use('/api/health', healthRoutes);
-
 app.use('/api/auth', authRoutes);
 app.use('/api/students', studentRoutes);
 app.use('/api/admin', adminRoutes);
@@ -73,7 +72,6 @@ if (process.env.NODE_ENV === 'production') {
   const frontendPath = path.join(__dirname, '../../frontend/dist');
   app.use(express.static(frontendPath));
   
-  // SPA fallback for frontend routes
   app.get('*', (req, res) => {
     if (req.url.startsWith('/api')) {
       return res.status(404).json({ message: 'API endpoint not found' });

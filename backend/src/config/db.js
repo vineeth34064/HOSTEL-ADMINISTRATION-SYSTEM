@@ -9,7 +9,8 @@ export async function connectDB() {
     await mongoose.connect(uri, {
       serverSelectionTimeoutMS: 5000,
     });
-    console.log('MongoDB connected');
+    console.log('MongoDB connected successfully to', uri);
+    await seedAdmin();
   } catch (err) {
     console.error('MongoDB connection error. Falling back to in-memory database:', err.message);
     try {
@@ -17,22 +18,32 @@ export async function connectDB() {
       const memUri = mongoServer.getUri();
       await mongoose.connect(memUri);
       console.log('In-memory MongoDB started and connected successfully');
-      
-      // Auto-seed admin for testing
-      const { default: bcrypt } = await import('bcryptjs');
-      const { User } = await import('../models/User.js');
+      await seedAdmin();
+    } catch (memErr) {
+      console.error('Failed to start in-memory database fallback:', memErr);
+      process.exit(1);
+    }
+  }
+}
+
+async function seedAdmin() {
+  try {
+    const { User } = await import('../models/User.js');
+    const { default: bcrypt } = await import('bcryptjs');
+    const adminEmail = 'admin@iiitk.ac.in';
+    const existing = await User.findOne({ email: adminEmail });
+    if (!existing) {
       await User.create({
         name: 'System Admin',
-        email: 'admin@iiitk.ac.in',
+        email: adminEmail,
         passwordHash: await bcrypt.hash('adminpassword', 10),
         role: 'admin',
         rollNumber: 'ADMIN001',
         feePaid: true,
       });
-      console.log('Seeded test Admin account.');
-    } catch (memErr) {
-      console.error('Failed to start in-memory database fallback:', memErr);
-      process.exit(1);
+      console.log('Default admin seeded: admin@iiitk.ac.in / adminpassword');
     }
+  } catch (e) {
+    console.error('Admin seeding skipped or failed:', e.message);
   }
 }

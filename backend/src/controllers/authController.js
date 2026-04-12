@@ -9,7 +9,9 @@ const SALT_ROUNDS = 10;
 
 export async function register(req, res) {
   try {
-    const { name, email, password, rollNumber, contactNumber } = req.body;
+    const { name, password, rollNumber, contactNumber } = req.body;
+    const email = req.body.email?.toLowerCase();
+    
     if (!name || !email || !password) {
       return res.status(400).send('Missing required fields');
     }
@@ -77,7 +79,6 @@ export async function register(req, res) {
 
       const pick = (arr) => arr[Math.floor(Math.random() * arr.length)];
 
-      // Set last medical checkup to a date within the past year
       const pastDate = new Date();
       pastDate.setMonth(pastDate.getMonth() - Math.floor(Math.random() * 10 + 1));
 
@@ -98,7 +99,6 @@ export async function register(req, res) {
         healthInsuranceDetails: pick(sampleInsurance),
         lastMedicalCheckup: pastDate,
       });
-      console.log(`Health record created for user: ${user.name} (Blood: ${randomBlood})`);
     } catch (e) {
       console.error('Failed to create health record:', e.message);
     }
@@ -108,20 +108,21 @@ export async function register(req, res) {
     res
       .cookie('token', token, {
         httpOnly: true,
-        sameSite: isProduction ? 'none' : 'lax',
+        sameSite: 'lax',
         secure: isProduction,
-        maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+        maxAge: 7 * 24 * 60 * 60 * 1000,
       })
       .json(mapUser(user));
   } catch (err) {
-    console.error(err);
+    console.error('Registration error:', err);
     res.status(500).send('Failed to register');
   }
 }
 
 export async function login(req, res) {
   try {
-    const { email, password } = req.body;
+    const email = req.body.email?.toLowerCase();
+    const { password } = req.body;
     const user = await User.findOne({ email });
     if (!user) {
       return res.status(400).send('Invalid email or password');
@@ -137,9 +138,9 @@ export async function login(req, res) {
     res
       .cookie('token', token, {
         httpOnly: true,
-        sameSite: isProduction ? 'none' : 'lax',
+        sameSite: 'lax',
         secure: isProduction,
-        maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+        maxAge: 7 * 24 * 60 * 60 * 1000,
       })
       .json(mapUser(user));
   } catch (err) {
