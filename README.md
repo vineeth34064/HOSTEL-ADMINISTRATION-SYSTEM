@@ -1,4 +1,4 @@
-# Hostel Management System (HMS)
+# Hostel Administration System (HMS)
 
 This repository contains the source code for a comprehensive Hostel Management System, featuring an automated student portal and an administrative dashboard.
 
