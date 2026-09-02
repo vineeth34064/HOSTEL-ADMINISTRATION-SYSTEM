@@ -9,20 +9,26 @@ export async function connectDB() {
     await mongoose.connect(uri, {
       serverSelectionTimeoutMS: 5000,
     });
-    console.log('MongoDB connected successfully to', uri);
+    console.log('MongoDB connected successfully');
     await seedAdmin();
   } catch (err) {
-    console.error('MongoDB connection error. Falling back to in-memory database:', err.message);
-    try {
-      const mongoServer = await MongoMemoryServer.create();
-      const memUri = mongoServer.getUri();
-      await mongoose.connect(memUri);
-      console.log('In-memory MongoDB started and connected successfully');
-      await seedAdmin();
-    } catch (memErr) {
-      console.error('Failed to start in-memory database fallback:', memErr);
-      process.exit(1);
+    console.error('MongoDB connection error:', err.message);
+    
+    // Attempt in-memory fallback only in non-production environments
+    if (process.env.NODE_ENV !== 'production') {
+      try {
+        console.log('Attempting in-memory MongoDB fallback...');
+        const mongoServer = await MongoMemoryServer.create();
+        const memUri = mongoServer.getUri();
+        await mongoose.connect(memUri);
+        console.log('In-memory MongoDB started and connected successfully');
+        await seedAdmin();
+        return;
+      } catch (memErr) {
+        console.error('In-memory MongoDB fallback unavailable:', memErr.message);
+      }
     }
+    console.warn('⚠️ Server running without active MongoDB connection. Please verify MONGODB_URI & Atlas credentials.');
   }
 }
 

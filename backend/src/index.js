@@ -49,6 +49,10 @@ app.use(cors({
 app.use(cookieParser());
 app.use(express.json());
 
+// Root & API Health Pings for Cloud Load Balancers
+app.get('/health', (req, res) => res.status(200).json({ status: 'ok' }));
+app.get('/api/ping', (req, res) => res.status(200).json({ status: 'ok' }));
+
 app.use('/api/health', healthRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/students', studentRoutes);
@@ -85,8 +89,10 @@ app.use((err, req, res, next) => {
   res.status(500).send('Internal server error');
 });
 
-connectDB().then(() => {
-  app.listen(PORT, () => {
-    console.log(`Server listening on port ${PORT}`);
+// Bind port immediately so Render/Cloud port scan succeeds without waiting for DB
+app.listen(PORT, () => {
+  console.log(`Server listening on port ${PORT}`);
+  connectDB().catch((err) => {
+    console.error('Database connection initialization error:', err.message);
   });
 });
